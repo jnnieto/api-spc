@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                              
+    "module": "commonjs",                           
+    "moduleResolution": "node",                      
+    "sourceMap": true,                            
+    "outDir": "./dist",                            
+    "esModuleInterop": true,                                                /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    "forceConsistentCasingInFileNames": true,        
+    "strict": true,                                                     /* Skip type checking .d.ts files that are included with TypeScript. */
+    "skipLibCheck": true                              
+  },
+  "include": ["src/**/*"],
+  "exclude": ["cloud-functions"]
+}
