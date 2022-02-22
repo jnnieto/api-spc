@@ -1,11 +1,13 @@
 import express, { Application }from "express";
-import router from "../routes/products.routes";
+import cors from "cors";
+import morgan from "morgan";
+import productRouter from "../routes/products.routes";
 
 class Server {
 
     private app: Application;
 
-    private port: string;
+    private readonly port: string;
 
     private apiPaths = {
         products: "/api/products"
@@ -13,12 +15,18 @@ class Server {
 
     constructor() {
         this.app = express();
+        this.app.use(cors());
         this.port = '8080';
+        this.middlewares();
         this.routes();
     }
 
-    routes() {
-        this.app.use(this.apiPaths.products, router);
+    private middlewares(): void {
+        this.app.use(morgan('dev'));
+    }
+
+    private routes() {
+        this.app.use(this.apiPaths.products, productRouter);
     }
 
     listen(): void {
