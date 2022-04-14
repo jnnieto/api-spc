@@ -1,6 +1,6 @@
-import Joi, {required} from "joi";
+import Joi from "joi";
 
-const id = Joi.string().min(20).max(20);
+const id = Joi.string().min(20);
 const availabilityDate = Joi.date();
 const description = Joi.string();
 const farm = Joi.string().min(5);

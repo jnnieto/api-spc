@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-export const errorHandler = (err: any, req: Request, res: Response) => {
+export const errorHandler = (err: Error, req: any, res: any) => {
     res.status(500).json({
         message: err.message,
-        stack: err.stack
-    });
+        stack: err.stack,
+    })
 }
 
 export const boomErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {

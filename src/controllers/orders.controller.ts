@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
 import admin from "../firebase/config";
-import _firestore from "@google-cloud/firestore";
-import { Cart } from "../interfaces/cart.interface";
 import Boom from "@hapi/boom";
+
+import { Cart } from "../interfaces/cart.interface";
 
 const db = admin.firestore();
 
 interface OrderRequest {
+    idProducer: string,
     names: string,
     lastnames: string,
     products: ProductOrder[]
@@ -21,13 +21,19 @@ interface ProductOrder {
 
 export class OrdersController {
 
-    async getProducersOrder(req: Request, res: Response) {
-        const { id } = req.params;
+    async getProducersOrder(id: string) {
+
         const cartSnap = await db.collection('users').doc(id).collection('shopping-cart').get();
         const shoppingCarts = cartSnap.docs.map(doc => doc.data()) as Cart[];
+
+        if (shoppingCarts.length <= 0) {
+            throw Boom.notFound('Consumer not found')
+        }
+
         const idProducers: any[] = [];
         const producers: any[] = [];
         const orders: OrderRequest[] = [];
+
         for (const cart of shoppingCarts) {
             if (!idProducers.includes(cart.product.idProducer)) {
                 const producerSnap = await db.collection('users').doc(cart.product.idProducer).get();
@@ -51,17 +57,16 @@ export class OrdersController {
                     products.push(product)
                 }
             });
-
             orderRequest = {
+                idProducer: producer.uid,
                 names: producer.names,
                 lastnames: producer.lastnames,
                 products
             }
-
             orders.push(orderRequest);
-        })
+        });
+        return orders;
 
-        res.status(200).json(orders)
     }
 
 }
