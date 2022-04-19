@@ -15,6 +15,7 @@ interface OrderRequest {
 interface ProductOrder {
     name: string,
     quantity: number,
+    unit: string,
     subtotal: number,
     image: string
 }
@@ -51,6 +52,7 @@ export class OrdersController {
                     const product: ProductOrder = {
                         name: cart.product.name,
                         quantity: cart.quantity,
+                        unit: cart.product.unit,
                         subtotal: cart.subtotal,
                         image: cart.product.image
                     }
@@ -58,7 +60,7 @@ export class OrdersController {
                 }
             });
             orderRequest = {
-                idProducer: producer.uid,
+                idProducer: producer.uid.trim(),
                 names: producer.names,
                 lastnames: producer.lastnames,
                 products
