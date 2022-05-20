@@ -1,30 +1,27 @@
-import dotenv from 'dotenv';
 import express from "express";
+import hbs from "hbs";
 import cors from "cors";
 import morgan from "morgan";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUI from "swagger-ui-express";
 
 import { boomErrorHandler, errorHandler } from "./middlewares/error.handler";
-import {routerApi} from "./routes";
-
-dotenv.config();
+import { routerApi } from "./routes";
 
 const app = express();
 const port = process.env.PORT || 8080;
 
+const whitelist = ['http://localhost:4200', 'https://api-proyecto-spc.herokuapp.com'];
 app.use(express.json());
-
-const whitelist = ['http://localhost:4200', 'https://myapp.co'];
-// const options = {
-//     origin: (forceConsistentCasingInFileNames: any, callback: any) => {
-//         if (whitelist.includes(origin) || !origin) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error('no permitido'));
-//         }
-//     }
-// }
 app.use(cors());
 app.use(morgan('dev'))
+
+// Express Handlebars
+app.set('view engine', 'hbs');
+hbs.registerPartials('views/partials');
+
+// Espress static folder
+app.use(express.static("public"));
 
 routerApi(app);
 

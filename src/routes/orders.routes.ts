@@ -7,6 +7,21 @@ const ordersController = new OrdersController();
 
 const router: Router =  Router();
 
+/**
+ * @swagger
+ * /orders/order-products/{id}:
+ *  get:
+ *      summary: Get products list orders by producer
+ *      tags: [Orders]
+ *      response:
+ *          200:
+ *              description: Get products list by producer
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: integer
+ *                          example: 13
+ */
 router.get('/order-products/:id',
     validatorHandler(getCartConsumer, 'params'),
     async (req: Request, res: Response, next: NextFunction) => {

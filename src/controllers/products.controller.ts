@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import Boom from "@hapi/boom";
+
 import admin from "../firebase/config";
 
 const db = admin.firestore();
@@ -15,14 +17,16 @@ export const updateAvailableDate = async (req: Request, res: Response) => {
     const productSnap = await productRef.get();
 
     if ( !productSnap.exists ) {
-      res.status(404).json({
-        msg: `No existe el producto con el id ${ id }`
-      });
+      throw Boom.notFound('Product not found');
     } else {
-      productRef.update({
-        availabilityDate: null,
-        productiveStatus: "Disponible"
+      await productRef.update({
+          availabilityDate: null,
+          productiveStatus: "Disponible"
       })
 
     }
+
+    res.status(200).json({
+        productRef
+    })
 }
