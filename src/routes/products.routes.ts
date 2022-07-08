@@ -1,9 +1,13 @@
-import { Router } from "express";
-import * as productsController from "../controllers/products.controller";
+import { NextFunction, Request, Response, Router } from "express";
+
 import validatorHandler from "../middlewares/validator.handler";
+
+import {ProductController} from "../controllers/products.controller";
 import {getIdDocument} from "../schemas/document.schema";
 
 const router: Router = Router();
+
+const productsController = new ProductController();
 
 /**
  * @swagger
@@ -21,9 +25,27 @@ const router: Router = Router();
  *                          items:
  *                              $ref: '#/components/schemas/Product'
  *          500:
- *              description: Error de servidor
+ *              description: Server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/ServerError'
+ *                      example:
+ *                          message: Server error
+ *                          stack: /products
  */
-router.get('', productsController.getAllProducts);
+router.get('',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+
+            const products = await productsController.getAllProducts();
+            res.status(200).json(products);
+
+        } catch (err) {
+            next(err);
+        }
+    });
 
 /**
  * @swagger
@@ -52,12 +74,34 @@ router.get('', productsController.getAllProducts);
  *                  application/json:
  *                      schema:
  *                          type: object
- *                          $ref: '#/components/schemas/Product'
+ *                          $ref: '#/components/schemas/NotFound'
+ *                      example:
+ *                          statusCode: 404
+ *                          error: Not Found
+ *                          message: Product not found
  *          500:
- *              description: Error de servidor
+ *              description: Server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/ServerError'
+ *                      example:
+ *                          message: Server error
+ *                          stack: /products/productive-status/:id
  */
 router.put('/productive-status/:id',
     validatorHandler(getIdDocument, 'params'),
-    productsController.updateAvailableDate);
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+
+            const { id } = req.params;
+            const product = await productsController.updateAvailableDate(id);
+            res.status(200).json(product);
+
+        } catch (err) {
+            next(err);
+        }
+    });
 
 export default router;

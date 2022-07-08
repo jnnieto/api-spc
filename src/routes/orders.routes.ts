@@ -21,6 +21,13 @@ const router: Router =  Router();
  *                      schema:
  *                          type: integer
  *                          example: 13
+ *          500:
+ *              description: Server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+     *                          $ref: '#/components/schemas/Product'
  */
 router.get('/order-products/:id',
     validatorHandler(getCartConsumer, 'params'),

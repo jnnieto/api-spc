@@ -2,8 +2,7 @@ import express from "express";
 import hbs from "hbs";
 import cors from "cors";
 import morgan from "morgan";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUI from "swagger-ui-express";
+import "dotenv/config"
 
 import { boomErrorHandler, errorHandler } from "./middlewares/error.handler";
 import { routerApi } from "./routes";

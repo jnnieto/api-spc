@@ -4,9 +4,9 @@ import serverRoutes from "./server.routes";
 import ordersRoutes from "./orders.routes";
 import productsRoutes from "./products.routes";
 import swaggerUI from "swagger-ui-express";
-import router from "./server.routes";
 import swaggerJSDoc from "swagger-jsdoc";
 import {options} from "../helpers/swaggerOptions";
+import notificationsRoutes from "./notifications.route";
 
 const specs = swaggerJSDoc(options);
 
@@ -72,10 +72,27 @@ export const routerApi = (app: Application) => {
      *              stock: 45
      *              productiveStatus: Disponible
      *              availabilityDate: null
-     *      Not found:
+     *      NotFound:
      *          type: object
      *          properties:
-     *
+     *              statusCode:
+     *                  type: integer
+     *                  description: Status code server response (404)
+     *              error:
+     *                  type: string
+     *                  description: Not found message error
+     *              message:
+     *                  type: string
+     *                  description: Message error document not found
+     *      ServerError:
+     *          type: object
+     *          properties:
+     *              message:
+     *                  type: string
+     *                  description: Message server error
+     *              stack:
+     *                  type: string
+     *                  description: Route server error
      */
 
     router.use('/products', productsRoutes);
@@ -87,6 +104,14 @@ export const routerApi = (app: Application) => {
      *  description: Orders endpoints
      */
     router.use('/orders', ordersRoutes);
+
+    /**
+     * @swagger
+     * tags:
+     *  name: Notifications
+     *  description: Notifications endpoints
+     */
+    router.use('/notifications', notificationsRoutes)
 
     /**
      * Documentación de la API con Swagger
