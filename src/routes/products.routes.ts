@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response, Router } from "express";
-
-import validatorHandler from "../middlewares/validator.handler";
+import { check } from "express-validator";
 
 import {ProductController} from "../controllers/products.controller";
-import {getIdDocument} from "../schemas/document.schema";
+import { validateFields } from "../middlewares/validate-fields";
 
 const router: Router = Router();
 
@@ -90,8 +89,11 @@ router.get('',
  *                          message: Server error
  *                          stack: /products/productive-status/:id
  */
-router.put('/productive-status/:id',
-    validatorHandler(getIdDocument, 'params'),
+router.put('/productive-status/:id', [
+    check('id', 'El id de la orden es obligatoria').not().isEmpty(),
+    check('id', 'El id debe tener un mínimo 25 y máximo 30 caracteres').isLength({ min: 25, max: 30 }),
+    validateFields
+    ],
     async (req: Request, res: Response, next: NextFunction) => {
         try {
 

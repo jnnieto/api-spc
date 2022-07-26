@@ -2,23 +2,10 @@ import admin from "../firebase/config";
 import Boom from "@hapi/boom";
 
 import { Cart } from "../interfaces/cart.interface";
+import {OrderRequest, ProductOrder} from "../interfaces/order-request.interface";
+import {Order} from "../interfaces/order.interface";
 
 const db = admin.firestore();
-
-interface OrderRequest {
-    idProducer: string,
-    names: string,
-    lastnames: string,
-    products: ProductOrder[]
-}
-
-interface ProductOrder {
-    name: string,
-    quantity: number,
-    unit: string,
-    subtotal: number,
-    image: string
-}
 
 export class OrdersController {
 
@@ -69,6 +56,17 @@ export class OrdersController {
         });
         return orders;
 
+    }
+
+    async getAvailableCarriers(orderId: string) {
+        const orderRef = await db.collection('orders').doc(orderId).get();
+        const orderSnap = orderRef.data() as Order;
+
+        if (!orderSnap) {
+            throw Boom.notFound('Order not found')
+        }
+
+        // Search carriers according to the producer localization
     }
 
 }

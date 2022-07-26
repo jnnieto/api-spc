@@ -1,11 +1,4 @@
-import { NextFunction, Request, Response } from "express";
-
-export const errorHandler = (err: any, req: Request, res: Response) => {
-    res.status(500).json({
-        message: err.message,
-        stack: err.stack,
-    })
-}
+import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 
 export const boomErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     if (err.isBoom) {
@@ -15,4 +8,10 @@ export const boomErrorHandler = (err: any, req: Request, res: Response, next: Ne
     next(err);
 }
 
+export const errorHandler: ErrorRequestHandler = (err: any, req: Request, res: Response) => {
+    res.status(500).json({
+        message: err.message,
+        stack: err.stack,
+    })
+}
 

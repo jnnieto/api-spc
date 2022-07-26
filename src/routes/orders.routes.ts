@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response, Router} from "express";
 import {OrdersController} from "../controllers/orders.controller";
-import { getCartConsumer } from "../schemas/cart.schema";
-import validatorHandler from "../middlewares/validator.handler";
+import { check } from "express-validator";
+import { validateFields } from "../middlewares/validate-fields";
 
 const ordersController = new OrdersController();
 
@@ -29,8 +29,11 @@ const router: Router =  Router();
  *                          type: object
      *                          $ref: '#/components/schemas/Product'
  */
-router.get('/order-products/:id',
-    validatorHandler(getCartConsumer, 'params'),
+router.get('/order-products/:id', [
+        check('id', 'El id de consumidor es obligatori0').not().isEmpty(),
+        check('id', 'El id debe tener un mínimo 25 y máximo 30 caracteres').isLength({ min: 25, max: 30 }),
+        validateFields
+    ],   
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params;
@@ -40,6 +43,8 @@ router.get('/order-products/:id',
             next(err);
         }
     }
-)
+);
+
+router.get('available-carries/:id')
 
 export default router;

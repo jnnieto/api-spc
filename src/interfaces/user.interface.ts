@@ -11,5 +11,5 @@ export interface User {
     municipality: string,
     profileURL: string,
     stateUser: boolean,
-    notificationsToken: string[]
+    notificationsToken: string
 }

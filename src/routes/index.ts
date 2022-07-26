@@ -6,7 +6,7 @@ import productsRoutes from "./products.routes";
 import swaggerUI from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import {options} from "../helpers/swaggerOptions";
-import notificationsRoutes from "./notifications.route";
+import notificationsRoutes from "./notifications.routes";
 
 const specs = swaggerJSDoc(options);
 
