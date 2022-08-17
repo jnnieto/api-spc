@@ -2,8 +2,8 @@ import admin from "../firebase/config";
 import Boom from "@hapi/boom";
 
 import { Cart } from "../interfaces/cart.interface";
-import {OrderRequest, ProductOrder} from "../interfaces/order-request.interface";
-import {Order} from "../interfaces/order.interface";
+import { OrderRequest, ProductOrder } from "../interfaces/order-request.interface";
+import { Order } from "../interfaces/order.interface";
 
 const db = admin.firestore();
 
