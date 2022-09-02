@@ -27,13 +27,13 @@ const router: Router =  Router();
  *                  application/json:
  *                      schema:
  *                          type: object
-     *                          $ref: '#/components/schemas/Product'
+ *                          $ref: '#/components/schemas/Product'
  */
 router.get('/order-products/:id', [
         check('id', 'El id de consumidor es obligatori0').not().isEmpty(),
         check('id', 'El id debe tener un mínimo 25 y máximo 30 caracteres').isLength({ min: 25, max: 30 }),
         validateFields
-    ],   
+    ],
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params;
