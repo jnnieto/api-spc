@@ -1,9 +1,9 @@
-import admin from "../firebase/config";
+
 import Boom from "@hapi/boom";
+import admin from "../firebase/config";
 
 import { Cart } from "../interfaces/cart.interface";
 import { OrderRequest, ProductOrder } from "../interfaces/order-request.interface";
-import { Order } from "../interfaces/order.interface";
 
 const db = admin.firestore();
 
@@ -58,15 +58,34 @@ export class OrdersController {
 
     }
 
-    async getAvailableCarriers(orderId: string) {
-        const orderRef = await db.collection('orders').doc(orderId).get();
-        const orderSnap = orderRef.data() as Order;
+    async searchAvailableCarriers(municipalities: string[]) {
 
-        if (!orderSnap) {
-            throw Boom.notFound('Order not found')
+        const carriersRef = db.collection('users')
+        const carrierSnap = await carriersRef.where('typeuser', '==', 'Transportador').get();
+
+        const carriers = carrierSnap.docs.map(carrier => carrier.data());
+
+        if (municipalities.length > 0) {
+            return Promise.all(carriers.map(async (carrier) => {
+                const routesSnap = await carriersRef.doc(carrier.uid).collection('routes').where('routes', 'array-contains-any', municipalities).get();
+    
+                if (!routesSnap.empty) {
+                    const vehicleSnap = await carriersRef.doc(carrier.uid).collection('vehicle').get();
+    
+                    return {
+                        carrier,
+                        routes: routesSnap.docs.map(r => r.data()),
+                        vehicle: vehicleSnap.docs.map(v => v.data())
+                    }
+                } else {
+                    return null
+                }
+            }))
+            
+        } else {
+            return {}
         }
 
-        // Search carriers according to the producer localization
     }
 
 }

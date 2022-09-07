@@ -2,15 +2,14 @@ import axios from "axios";
 import Boom from "@hapi/boom";
 import admin from "../firebase/config";
 
-import {notifyOrderPaidConsumer, purchaseRequest} from "../helpers/body-emails";
-import { User } from "../interfaces/user.interface";
+import { notifyOrderPaidConsumer, notifyOrderToTransport, purchaseRequest } from "../helpers/body-emails";
 import { transporter } from "../helpers/email-transporter";
+import { NotificationData } from "../interfaces/notification-data.interface";
 import { Order } from "../interfaces/order.interface";
-import {NotificationData} from "../interfaces/notification-data.interface";
+import { User } from "../interfaces/user.interface";
 
 const db = admin.firestore();
 const baseURL = 'https://fcm.googleapis.com/fcm/send';
-
 
 export class NotificationsController {
 
@@ -45,7 +44,7 @@ export class NotificationsController {
 
             // Información transportador
             const carrierSnap = await this.getUserInfo(orderRequest.idCarrier || "", 'carrier');
-            // await this.sendEmail(carrierSnap, orderRequest, orderRequest.status);
+            await this.sendEmail(carrierSnap, orderRequest, orderRequest.status);
 
             if (carrierSnap.notificationsToken) {
                 const data: NotificationData = {
@@ -87,13 +86,12 @@ export class NotificationsController {
         const userRef = await db.collection('users').doc(idUser).get();
         const userSnap = userRef.data() as User;
         if (!userSnap) {
-            throw Boom.notFound(`${
-                typeUser === 'producer'
+            throw Boom.notFound(`${typeUser === 'producer'
                     ? 'Producer'
                     : typeUser === 'consumer'
                         ? 'Consumer'
                         : 'Carrier'
-            } not found`);
+                } not found`);
         }
         return userSnap;
     }
@@ -106,7 +104,7 @@ export class NotificationsController {
             if (user.typeuser === 'Consumidor') {
                 body = notifyOrderPaidConsumer(user);
             } else {
-                body = notifyOrderPaidConsumer(user);
+                body = notifyOrderToTransport(user);
             }
         }
         else
@@ -126,16 +124,16 @@ export class NotificationsController {
         return new Promise(async (resolve, reject) => {
             const serverPassword = process.env.SERVER_PASSWORD;
             try {
-             await axios({
-                method: 'post',
-                url: baseURL,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `key=${serverPassword}`
-                },
-                 data
-            });
-            resolve("ok");
+                await axios({
+                    method: 'post',
+                    url: baseURL,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `key=${serverPassword}`
+                    },
+                    data
+                });
+                resolve("ok");
             } catch (e) {
                 reject(e);
             }

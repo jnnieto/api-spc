@@ -45,6 +45,16 @@ router.get('/order-products/:id', [
     }
 );
 
-router.get('available-carries/:id')
+router.post('/available-carriers',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const body = req.body as string[];
+            const availableCarriers = await ordersController.searchAvailableCarriers(body);
+            res.status(200).json(availableCarriers);
+        } catch (error) {
+            next(error);
+        }
+    }
+)
 
 export default router;

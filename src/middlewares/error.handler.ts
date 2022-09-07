@@ -8,7 +8,7 @@ export const boomErrorHandler = (err: any, req: Request, res: Response, next: Ne
     next(err);
 }
 
-export const errorHandler: ErrorRequestHandler = (err: any, req: Request, res: Response) => {
+export const errorHandler = (err: TypeError, req: Request, res: Response) => {
     res.status(500).json({
         message: err.message,
         stack: err.stack,
