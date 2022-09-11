@@ -2,6 +2,7 @@ import {NextFunction, Request, Response, Router} from "express";
 import {OrdersController} from "../controllers/orders.controller";
 import { check } from "express-validator";
 import { validateFields } from "../middlewares/validate-fields";
+import {Tariff} from "../interfaces/tariff.interface";
 
 const ordersController = new OrdersController();
 
@@ -55,6 +56,18 @@ router.post('/available-carriers',
             next(error);
         }
     }
-)
+);
+
+router.post('/calculate-order-tariff',
+    async  (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const body = req.body as Tariff;
+            const response = await ordersController.calculateOrderTariff(body);
+            res.status(200).json({ message: response });
+        } catch (error) {
+            next(error);
+        }
+    }
+);
 
 export default router;

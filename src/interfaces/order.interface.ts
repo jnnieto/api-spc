@@ -11,6 +11,7 @@ export interface Order {
     chosenPayment: PaymentMethod;
     status: string;
     paymentLimitDate?: Date;
+    tariff?: number;
     idCarrier?: string;
     id?: string;
 }

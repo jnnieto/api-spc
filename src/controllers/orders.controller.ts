@@ -4,6 +4,8 @@ import admin from "../firebase/config";
 
 import { Cart } from "../interfaces/cart.interface";
 import { OrderRequest, ProductOrder } from "../interfaces/order-request.interface";
+import { Tariff } from "../interfaces/tariff.interface";
+import {Order} from "../interfaces/order.interface";
 
 const db = admin.firestore();
 
@@ -68,10 +70,10 @@ export class OrdersController {
         if (municipalities.length > 0) {
             return Promise.all(carriers.map(async (carrier) => {
                 const routesSnap = await carriersRef.doc(carrier.uid).collection('routes').where('routes', 'array-contains-any', municipalities).get();
-    
+
                 if (!routesSnap.empty) {
                     const vehicleSnap = await carriersRef.doc(carrier.uid).collection('vehicle').get();
-    
+
                     return {
                         carrier,
                         routes: routesSnap.docs.map(r => r.data()),
@@ -81,11 +83,57 @@ export class OrdersController {
                     return null
                 }
             }))
-            
+
         } else {
             return {}
         }
 
     }
+
+    async calculateOrderTariff(data: Tariff) {
+        try {
+            const orderRef = await  db.collection('orders').doc(data.idOrder).get();
+            const orderSnap = orderRef.data() as Order;
+            if (!orderSnap) {
+                throw Boom.notFound(`Order with id ${ data.idOrder } not found`);
+            }
+
+            let distance: string | number = data.distance.substring(0, data.distance.length - 3);
+            distance = distance.replace(/,/g, '.');
+            distance = parseFloat(distance);
+
+            let tariff: number = this.calculateDistanceTariff(distance);
+
+            orderSnap.products.forEach(product => {
+                tariff += product.subtotal * 0.05;
+            });
+
+            orderSnap.tariff = tariff;
+
+            const res = await db.collection('orders').doc(orderRef.id).update(orderSnap);
+            if (res) {
+                return 'Tarifa calculada correctamente'
+            }
+        } catch (e) {
+            throw Boom.internal('Ocurrió al calcular la tarifa de envío del pedido');
+        }
+    }
+
+    private calculateDistanceTariff(distance: number): number {
+        let tariff: number = 0;
+        if (distance < 0 && distance >= 5) {
+            tariff = 2500;
+        } else if (distance > 5  && distance <= 15) {
+            tariff = 3000;
+        } else if (distance > 15  && distance <= 25) {
+            tariff = 4500;
+        } else if (distance > 25  && distance <= 40) {
+            tariff = 5500;
+        } else {
+            tariff = 6500;
+        }
+        return tariff;
+    }
+
 
 }

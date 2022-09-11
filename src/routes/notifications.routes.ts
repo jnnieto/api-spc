@@ -50,6 +50,19 @@ router.post('/order-paid',
         } catch (e) {
             next(e);
         }
-    });
+});
+
+router.post('/order-on-the-way',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const order: Order = req.body;
+            const response = await notificationsController.notifyOrderOnTheWay(order);
+            res.status(200).json({
+                message: response
+            })
+        } catch (e) {
+            next(e);
+        }
+});
 
 export default router;
