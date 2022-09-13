@@ -112,7 +112,7 @@ export class OrdersController {
 
             const res = await db.collection('orders').doc(orderRef.id).update(orderSnap);
             if (res) {
-                return 'Tarifa calculada correctamente'
+                return tariff
             }
         } catch (e) {
             throw Boom.internal('Ocurrió al calcular la tarifa de envío del pedido');

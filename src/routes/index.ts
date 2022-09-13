@@ -94,7 +94,6 @@ export const routerApi = (app: Application) => {
      *                  type: string
      *                  description: Route server error
      */
-
     router.use('/products', productsRoutes);
 
     /**

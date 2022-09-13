@@ -63,7 +63,7 @@ router.post('/calculate-order-tariff',
         try {
             const body = req.body as Tariff;
             const response = await ordersController.calculateOrderTariff(body);
-            res.status(200).json({ message: response });
+            res.status(200).json({ tariff: response });
         } catch (error) {
             next(error);
         }
