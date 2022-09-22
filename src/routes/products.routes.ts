@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { check } from "express-validator";
 
-import {ProductController} from "../controllers/products.controller";
+import { ProductController } from "../controllers/products.controller";
 import { validateFields } from "../middlewares/validate-fields";
+import { Order } from "../interfaces/order.interface";
 
 const router: Router = Router();
 
@@ -45,6 +46,18 @@ router.get('',
             next(err);
         }
     });
+
+router.put('/reduce-product-stock',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const body = req.body as Order;
+            const response = await productsController.reduceProductStock(body);
+            res.status(200).json({ message: response });
+        } catch (err) {
+            next(err);
+        }
+    }
+)
 
 /**
  * @swagger

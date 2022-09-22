@@ -12,6 +12,7 @@ export interface OrderRequest {
 }
 
 export interface ProductOrder {
+    id: string,
     name: string,
     quantity: number,
     unit: string,

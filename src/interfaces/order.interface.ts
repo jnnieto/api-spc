@@ -1,10 +1,12 @@
 import {ProductOrder} from "./order-request.interface";
 import {Address} from "./address.interface";
+import {firestore} from "firebase-admin";
+import Timestamp = firestore.Timestamp;
 
 export interface Order {
     idProducer: string;
     idConsumer: string;
-    orderDate: Date;
+    orderDate: Timestamp;
     products: ProductOrder[];
     address: Address;
     total: number;

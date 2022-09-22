@@ -39,6 +39,7 @@ export class OrdersController {
             shoppingCarts.forEach(cart => {
                 if (cart.product.idProducer.trim() === producer.uid.trim()) {
                     const product: ProductOrder = {
+                        id: cart.product.id || "",
                         name: cart.product.name,
                         quantity: cart.quantity,
                         unit: cart.product.unit,

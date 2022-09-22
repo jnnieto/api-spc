@@ -1,12 +1,14 @@
 import express, {Application, Request, Response} from "express";
 
+import analyticsRoutes from "./analytics.routes";
 import serverRoutes from "./server.routes";
+import notificationsRoutes from "./notifications.routes";
 import ordersRoutes from "./orders.routes";
 import productsRoutes from "./products.routes";
 import swaggerUI from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import {options} from "../helpers/swaggerOptions";
-import notificationsRoutes from "./notifications.routes";
+
 
 const specs = swaggerJSDoc(options);
 
@@ -111,6 +113,14 @@ export const routerApi = (app: Application) => {
      *  description: Notifications endpoints
      */
     router.use('/notifications', notificationsRoutes)
+
+    /**
+     * @swagger
+     * tags:
+     *  name: Analytics
+     *  description: Analytics endpoints
+     */
+    router.use('/analytics', analyticsRoutes);
 
     /**
      * Documentación de la API con Swagger
