@@ -93,10 +93,14 @@ export class OrdersController {
 
     async calculateOrderTariff(data: Tariff) {
         try {
-            const orderRef = await  db.collection('orders').doc(data.idOrder).get();
+            const orderRef = await db.collection('orders').doc(data.idOrder).get();
             const orderSnap = orderRef.data() as Order;
-            if (!orderSnap) {
+            if (!orderRef.exists) {
                 throw Boom.notFound(`Order with id ${ data.idOrder } not found`);
+            }
+
+            if (orderSnap.status !== "En camino") {
+                throw Boom.badRequest(`Para calcular la tarifa de envío el pedido debe tener un estado de {{ En camino }}`);
             }
 
             let distance: string | number = data.distance.substring(0, data.distance.length - 3);

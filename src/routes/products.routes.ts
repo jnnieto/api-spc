@@ -14,7 +14,7 @@ const productsController = new ProductController();
  * /products:
  *  get:
  *      summary: Lista de productos registrados en SPC
- *      tags: [Product]
+ *      tags: [Products]
  *      responses:
  *          200:
  *              description: Lista de productos
@@ -46,50 +46,40 @@ router.get('',
             next(err);
         }
     });
-
-router.put('/reduce-product-stock',
-    async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const body = req.body as Order;
-            const response = await productsController.reduceProductStock(body);
-            res.status(200).json({ message: response });
-        } catch (err) {
-            next(err);
-        }
-    }
-)
-
 /**
  * @swagger
- * /products/productive-status/{id}:
+ * /reduce-product-stock:
  *  put:
- *      summary: Cambiar el estado productivo del producto disponible en la fecha actual
- *      tags: [Product]
- *      parameters:
- *          - in: path
- *            name: id
- *            schema:
- *                type: string
- *            required: true
- *            description: Id del producto
+ *      summary: Reducir el stock del pedido solicitado
+ *      tags: [Products]
+ *      requestBody:
+ *          description: El objeto del pedido para reducir el stock de cada producto solicitado
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/Order'
  *      responses:
  *          200:
- *              description: Producto con estado productivo actualizado
+ *              description: Stock del producto restado satisfactoriamente
  *              content:
  *                  application/json:
  *                      schema:
  *                          type: object
- *                          $ref: '#/components/schemas/Product'
+ *                          properties:
+ *                              message:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/Product'
  *          404:
- *              description: Producto no encontrado
+ *              description: Producto para reducir stock no encontrado
  *              content:
  *                  application/json:
  *                      schema:
  *                          type: object
  *                          $ref: '#/components/schemas/NotFound'
  *                      example:
- *                          statusCode: 404
- *                          error: Not Found
+ *                          statusCode: 400
+ *                          error: Not found
  *                          message: Product not found
  *          500:
  *              description: Server error
@@ -100,23 +90,18 @@ router.put('/reduce-product-stock',
  *                          $ref: '#/components/schemas/ServerError'
  *                      example:
  *                          message: Server error
- *                          stack: /products/productive-status/:id
+ *                          stack: /products/reduce-product-stock
  */
-router.put('/productive-status/:id', [
-    check('id', 'El id de la orden es obligatoria').not().isEmpty(),
-    check('id', 'El id debe tener un mínimo 25 y máximo 30 caracteres').isLength({ min: 25, max: 30 }),
-    validateFields
-    ],
+router.put('/reduce-product-stock',
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-
-            const { id } = req.params;
-            const product = await productsController.updateAvailableDate(id);
-            res.status(200).json(product);
-
+            const body = req.body as Order;
+            const response = await productsController.reduceProductStock(body);
+            res.status(200).json({ message: response });
         } catch (err) {
             next(err);
         }
-    });
+    }
+);
 
 export default router;

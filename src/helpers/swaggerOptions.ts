@@ -8,7 +8,7 @@ export const options = {
         },
         servers: [
             {
-                url: "htttp://localhost:8080/api",
+                url: "http://localhost:8080/api",
                 description: 'Entorno de desarrollo de la API'
             },
             {
