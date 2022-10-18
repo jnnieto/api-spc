@@ -1,0 +1,295 @@
+:root {
+    --principal-font: 'Roboto', sans-serif;
+    --secoundary-font: 'Lato', sans-serif;
+    --primary: #EE731B;
+    --secoundary: #4CAF50;
+    --accent: #4E3620;
+    --white: #FFFFFF;
+    --black: #1F1E1E;
+    --accent-light: #E1E1E1;
+    --separation: 5rem;
+}
+
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    font-family: var(--principal-font);
+    font-size: 1.6rem;
+    line-height: 1.5;
+}
+
+/** Globals **/
+
+.container {
+    max-width: 120rem;
+    width: 90%;
+    margin: 0 auto;
+}
+
+h1, h2, h3 {
+    font-weight: 900;
+    font-family: var(--secoundary-font);
+    margin: calc(var(--separation) / 2) 0;
+}
+
+h1 {
+    font-size: 4.4rem;
+}
+
+h2 {
+    font-size: 3.6rem;
+}
+
+h3 {
+    font-size: 2.8rem;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+    height: auto;
+}
+
+/** Utils **/
+
+.text-center {
+    text-align: center;
+}
+
+/** Gradients **/
+
+.green-gradient {
+    color: transparent;
+    background: linear-gradient(to right, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+/** Header **/
+
+.header {
+    background-color: var(--secoundary);
+    padding: calc(var(--separation) * 2) 0;
+    color: var(--white);
+}
+
+@media (min-width: 768px) {
+    .content-header {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: center;
+    }
+
+    .content-header .header-image {
+        margin: 0 auto;
+    }
+
+    .content-header .header-image img {
+        width: 30rem;
+    }
+}
+
+.documentation {
+    background: var(--secoundary);
+    display: flex;
+    justify-content: end;
+    font-weight: 700;
+    margin: 2rem 0;
+}
+
+.documentation a {
+    margin: 1rem 5rem;
+    text-decoration: none;
+    background-color: var(--primary);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    color: var(--white);
+    transition-property: transform background-color;
+    transition-duration: 0.3s;
+}
+
+.documentation a:hover {
+    background-color: var(--accent);
+}
+
+.header-text {
+    text-align: center;
+    padding-top: var(--separation);
+}
+
+.header-text p {
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .header-text {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0;
+    }
+}
+
+.header-tagline {
+    font-size: 3rem;
+    font-weight: 900;
+}
+
+.header-name {
+    font-size: 6rem;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .header-name {
+        font-size: 10rem;
+        line-height: 1;
+    }
+}
+
+/** Icons **/
+
+.icons {
+    padding: var(--separation) 0;
+}
+
+@media (min-width: 768px) {
+    .icons {
+        display: flex;
+        gap: 2rem;
+    }
+}
+
+.icon {
+    text-align: center;
+    margin-bottom: calc(var(--separation) / 2);
+}
+
+.icon:last-of-type {
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .icon {
+        margin: 0;
+    }
+}
+
+.icon img {
+    width: 5rem;
+    margin: 0 auto;
+}
+
+.icon h3 {
+    margin-top: calc(var(--separation) / 2);
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+/** About TechPRO **/
+
+.about-spc {
+    background-position: right;
+    background-repeat: repeat, no-repeat;
+    background-size: 100%, 110rem;
+}
+
+.about-spc {
+    background: linear-gradient(to bottom, transparent 50%, var(--primary) 0%), url(../../images/products.jpg);
+}
+
+.btn-to-spc {
+    margin-top: 2rem;
+}
+
+.btn-to-spc a {
+    text-decoration: none;
+    text-transform: uppercase;
+    background-color: var(--secoundary);
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    font-weight: 700;
+    color: var(--white);
+    transition-property: transform background-color;
+    transition-duration: 0.3s;
+}
+
+.btn-to-spc a:hover {
+    background-color: var(--accent);
+}
+
+@media (min-width: 768px) {
+    .about-spc {
+        background-repeat: repeat, no-repeat;
+    }
+
+    .about-spc {
+        background: linear-gradient(to left, transparent 50%, var(--primary) 0%), url(../../images/products.jpg);
+    }
+
+}
+
+@media (min-width: 1600px) {
+    .about-spc {
+        background-size: 100%, 110rem;
+    }
+}
+
+.about-spc-grid {
+    display: grid;
+    grid-template-rows: repeat(2, 40rem);
+    row-gap: var(--separation);
+}
+
+@media (min-width: 768px) {
+    .about-spc-grid {
+        grid-template-rows: unset;
+        row-gap: unset;
+        grid-template-columns: repeat(2, 1fr);
+        column-gap: 4rem;
+        padding: calc(var(--separation) * 2) 0;
+    }
+}
+
+.about-spc-text {
+    grid-row: 2 / 3;
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-bottom: var(--separation);
+}
+
+@media (min-width: 768px) {
+    .about-spc-text {
+        padding-bottom: 0;
+    }
+}
+
+.about-spc-text h2 {
+    font-size: 4rem;
+}
+
+.about-spc-text p {
+    font-size: 2rem;
+    line-height: 2;
+}
+
+/** Footer **/
+
+.footer p {
+    text-align: center;
+    font-family: var(--secoundary-font);
+    text-transform: uppercase;
+    font-size: 2.4rem;
+    color: var(--primary);
+}
+

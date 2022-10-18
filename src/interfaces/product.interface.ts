@@ -11,4 +11,5 @@ export interface Product {
     availabilityDate: Date;
     description: string;
     image: string;
+    municipality: string;
 }

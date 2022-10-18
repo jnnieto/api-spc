@@ -2,9 +2,15 @@ import admin from "../firebase/config";
 import { Order } from "../interfaces/order.interface";
 import { ProductOrder } from "../interfaces/order-request.interface";
 import Boom from "@hapi/boom";
-import {productTypes} from "../helpers/static-data";
+import {activeOrderStatus, productTypes} from "../helpers/static-data";
+import {Product} from "../interfaces/product.interface";
 
 const db = admin.firestore();
+
+export interface MunicipalityTop {
+    name: string,
+    quantity: number
+}
 
 export class AnalyticsController {
 
@@ -23,7 +29,7 @@ export class AnalyticsController {
 
     async productsRecentlyPurchased() {
         try {
-            const orderRef = await db.collection('orders').orderBy('orderDate').limit(5).get();
+            const orderRef = await db.collection('orders').orderBy('orderDate').limit(10).get();
             const recent: any[] = [];
             orderRef.docs.forEach(order => {
                 const {status, orderDate, products} = order.data() as Order;
@@ -97,6 +103,54 @@ export class AnalyticsController {
             return productsByType;
         } catch (e) {
             throw Boom.internal('Ocurrió un error al cargar la catidad de productos por tipo')
+        }
+    }
+
+    async getTopMunicipalities() {
+        try {
+            const productsRef = await db.collection('products').get();
+            let topMunicipalities: MunicipalityTop[] = [];
+            productsRef.forEach(product => {
+                const data = product.data() as Product;
+                if (data.municipality) {
+                    if (topMunicipalities.some(m => m.name === data.municipality)) {
+                        topMunicipalities = topMunicipalities.map(m => {
+                            if (m.name === data.municipality) {
+                                m.quantity++;
+                                return {
+                                    ...m,
+                                    quantity: m.quantity
+                                }
+                            } else {
+                                return m;
+                            }
+                        })
+                    } else {
+                        topMunicipalities.push({ name: data.municipality, quantity: 1 })
+                    }
+                }
+            });
+            topMunicipalities.sort((a, b) => b.quantity - a.quantity).slice(0, 9);
+            return topMunicipalities;
+        } catch(e) {
+            throw Boom.internal('Ocurrió un error al cargar el top municipios con más productos')
+        }
+    }
+
+    async getActiveOrders() {
+        try {
+            const activeOrders: any = {};
+            for (const status of activeOrderStatus) {
+                const ordersRef = await db.collection('orders').where('status', '==', status).get();
+                if (ordersRef.size === 0) {
+                    activeOrders[status] = 0;
+                } else {
+                    activeOrders[status] = ordersRef.size;
+                }
+            }
+            return activeOrders;
+        } catch (e) {
+            throw Boom.internal('Ocurrió un error al cargar la cantidad de productos activos')
         }
     }
 

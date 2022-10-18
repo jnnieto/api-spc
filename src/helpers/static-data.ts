@@ -5,3 +5,9 @@ export const productTypes = [
     "Granos",
     "Hierbas y aromáticas"
 ]
+
+export const activeOrderStatus = [
+    "Pendiente de pago",
+    "Pagado",
+    "En camino"
+]

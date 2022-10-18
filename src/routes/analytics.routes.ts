@@ -1,4 +1,4 @@
-import {AnalyticsController} from "../controllers/analytics.controller";
+import {AnalyticsController, MunicipalityTop} from "../controllers/analytics.controller";
 import {NextFunction, Request, Response, Router} from "express";
 
 
@@ -264,5 +264,89 @@ router.get('/products-by-type',
         }
     }
 );
+
+/**
+ * @swagger
+ * /analytics/top-municipalities:
+ *  get:
+ *      summary: Obtener el TOP 10 de municipios con más productos
+ *      tags: [Analytics]
+ *      responses:
+ *          200:
+ *              description: Municipios con más productos en orden descendente
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              $ref: '#/components/schemas/TopMunicipality'
+ *          500:
+ *              description: Server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/ServerError'
+ *                      example:
+ *                          message: Server error
+ *                          stack: /analytics/top-municipalities
+ */
+router.get('/top-municipalities',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const topMunicipalities: MunicipalityTop[] = await analyticsController.getTopMunicipalities();
+            res.status(200).json(topMunicipalities);
+        } catch (e) {
+            next(e);
+        }
+});
+
+/**
+ * @swagger
+ * /analytics/active-orders:
+ *  get:
+ *      summary: Obtener la cantidad de pedidos que están activos dentro de la plataforma
+ *      tags: [Analytics]
+ *      responses:
+ *          200:
+ *              description: Cantidad de pedidos en estado, Pendiente de pago, Pagado o En Camino
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              Pendientes de pago:
+ *                                  type: integer
+ *                                  description: Cantidad de pedidos en estado Pendiente de pago
+ *                              Pagado:
+ *                                  type: integer
+ *                                  description: Cantidad de pedidos en estado Pagado
+ *                              En camino:
+ *                                  type: integer
+ *                                  description: Cantidad de pedidos en estado En camino
+ *                      example:
+ *                          Pendientes de pago: 3
+ *                          Pagado: 5
+ *                          En camino: 4
+ *          500:
+ *              description: Server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          $ref: '#/components/schemas/ServerError'
+ *                      example:
+ *                          message: Server error
+ *                          stack: /analytics/active-orders
+ */
+router.get('/active-orders',
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const activeOrders = await analyticsController.getActiveOrders();
+            res.status(200).json(activeOrders)
+        } catch (e) {
+            next(e);
+        }
+});
 
 export default router;

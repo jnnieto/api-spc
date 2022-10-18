@@ -1,12 +1,10 @@
 import { Request, Response, Router } from "express";
+import * as path from "path";
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response) => {
-    res.render('index', {
-        nombre: 'Bienvenido a la API del Proyecto SPC',
-        title: 'API Proyecto SPC'
-    })
+    res.sendFile(path.join(__dirname, "../../public", "index.html"))
 });
 
 export default router;

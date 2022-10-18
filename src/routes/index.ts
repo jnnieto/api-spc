@@ -275,6 +275,15 @@ export const routerApi = (app: Application) => {
      *              id: oHzwRWvGUXhFo09zayIfWQkicTh2
      *              startHour: 6:00AM
      *              servicesDays: [ "Lunes", "Martes", "Miércoles" ]
+     *      TopMunicipality:
+     *          type: object
+     *          properties:
+     *              name:
+     *                  type: string
+     *                  description: Nombre del municipio
+     *              quantity:
+     *                  type: string
+     *                  description: Cantidad de productos que hay en el municipio
      *      User:
      *          type: object
      *          properties:
