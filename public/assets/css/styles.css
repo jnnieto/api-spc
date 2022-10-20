@@ -80,11 +80,16 @@ img {
     color: var(--white);
 }
 
+.content-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 @media (min-width: 768px) {
     .content-header {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        align-items: center;
     }
 
     .content-header .header-image {
@@ -163,8 +168,10 @@ img {
 
 @media (min-width: 768px) {
     .icons {
-        display: flex;
+        display: grid;
         gap: 2rem;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: start;
     }
 }
 
@@ -278,9 +285,10 @@ img {
     font-size: 4rem;
 }
 
-.about-spc-text p {
-    font-size: 2rem;
-    line-height: 2;
+@media (min-width: 768px) {
+    .about-spc-text p {
+        font-size: 2rem;
+    }
 }
 
 /** Footer **/

@@ -11,7 +11,7 @@ const router: Router =  Router();
  * @swagger
  * /orders/order-products/{id}:
  *  get:
- *      summary: Get products list orders by producer
+ *      summary: Obtener la lista de los productos a solicitar por productor
  *      tags: [Orders]
  *      parameters:
  *          - in: path
